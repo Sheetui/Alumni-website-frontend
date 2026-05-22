@@ -695,7 +695,7 @@ function loadAdminPanel() {
         renderAdminAlumni();
     });
 
-    document.getElementById('eventForm')?.addEventListener('submit', async function(e) {
+   /* document.getElementById('eventForm')?.addEventListener('submit', async function(e) {
         e.preventDefault();
         try {
             await apiFetch('/api/admin/events', {
@@ -713,7 +713,39 @@ function loadAdminPanel() {
         } catch (e) {
             alert(e.message || 'Failed to publish event.');
         }
-    });
+    }); */
+
+    document.getElementById('eventForm')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    try {
+        await apiFetch('/api/admin/events', {
+            method: 'POST',
+            token: auth.getToken(),
+            body: {
+                title: document.getElementById('eventTitle').value.trim(),
+                desc: document.getElementById('eventDesc').value.trim(),
+                date:
+                    document.getElementById('eventDate').value ||
+                    new Date().toISOString().slice(0, 10),
+                type: 'notice'
+            }
+        });
+
+        this.reset();
+
+        alert('Event/Notice published successfully!');
+
+    } catch (e) {
+        console.error(e);
+
+        alert(
+            typeof e.message === 'string'
+                ? e.message
+                : 'Failed to publish event.'
+        );
+    }
+});
 
     document.getElementById('jobForm')?.addEventListener('submit', async function(e) {
         e.preventDefault();
