@@ -715,21 +715,27 @@ function loadAdminPanel() {
         }
     }); */
 
-    document.getElementById('eventForm')?.addEventListener('submit', async function(e) {
+   document.getElementById('eventForm')?.addEventListener('submit', async function(e) {
     e.preventDefault();
 
     try {
+
+        const payload = {
+            title: document.getElementById('eventTitle').value.trim(),
+
+            desc: document.getElementById('eventDesc').value.trim(),
+
+            date: document.getElementById('eventDate').value || null,
+
+            type: 'notice'
+        };
+
+        console.log("Sending payload:", payload);
+
         await apiFetch('/api/admin/events', {
             method: 'POST',
             token: auth.getToken(),
-            body: {
-                title: document.getElementById('eventTitle').value.trim(),
-                desc: document.getElementById('eventDesc').value.trim(),
-                date:
-                    document.getElementById('eventDate').value ||
-                    new Date().toISOString().slice(0, 10),
-                type: 'notice'
-            }
+            body: payload
         });
 
         this.reset();
@@ -737,15 +743,17 @@ function loadAdminPanel() {
         alert('Event/Notice published successfully!');
 
     } catch (e) {
-        console.error(e);
 
-        alert(
-            typeof e.message === 'string'
-                ? e.message
-                : 'Failed to publish event.'
-        );
+        console.error("FULL ERROR:", e);
+
+        if (typeof e === 'object') {
+            alert(JSON.stringify(e));
+        } else {
+            alert(e.message || 'Failed to publish event.');
+        }
     }
-});
+}); 
+   
 
     document.getElementById('jobForm')?.addEventListener('submit', async function(e) {
         e.preventDefault();
