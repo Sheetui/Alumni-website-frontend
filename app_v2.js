@@ -510,7 +510,7 @@ async function loadDashboard() {
     document.getElementById('userGreeting').textContent = `Welcome, ${user?.name || 'Alumni'}!`;
 
     // Profile
-    const profileForm = document.getElementById('profileForm');
+    /*const profileForm = document.getElementById('profileForm');
     if (profileForm) {
         profileForm.querySelector('#profileName').value = user?.name || '';
         profileForm.querySelector('#profileEmail').value = user?.email || '';
@@ -589,7 +589,164 @@ async function loadDashboard() {
                 alert(e2.message || 'Failed to update profile.');
             }
         });
+    } */
+
+    // Profile
+const profileForm = document.getElementById('profileForm');
+
+if (profileForm) {
+
+    profileForm.querySelector('#profileName').value = user?.name || '';
+    profileForm.querySelector('#profileEmail').value = user?.email || '';
+    profileForm.querySelector('#profileMobile').value = user?.mobile || '';
+    profileForm.querySelector('#profileGender').value = user?.gender || '';
+    profileForm.querySelector('#profilePassingYear').value = user?.batch || '';
+    profileForm.querySelector('#profileCourse').value = user?.course || '';
+
+    const companyType = user?.company_type || 'company';
+    const companyValue = user?.company || '';
+
+    profileForm.querySelector('#profileCompanyType').value =
+        companyType === 'higher' ? 'higher' : 'company';
+
+    profileForm.querySelector('#profileCompanyName').value =
+        companyType === 'higher' ? '' : companyValue;
+
+    profileForm.querySelector('#profileHigherStudiesName').value =
+        companyType === 'higher' ? companyValue : '';
+
+    profileForm.querySelector('#profileExperience').value =
+        user?.experience || '';
+
+    // REMOVE THIS LINE:
+    // profileForm.querySelector('#profilePicture').value = user?.profile_picture || '';
+
+    profileForm.querySelector('#profileSkills').value =
+        user?.skills || '';
+
+    profileForm.querySelector('#profileAchievements').value =
+        user?.achievements || '';
+
+    // Show existing profile image preview
+    const preview = document.getElementById('profilePreview');
+
+    if (preview && user?.profile_picture) {
+        preview.src = user.profile_picture;
+        preview.style.display = 'block';
     }
+
+    // Company / Higher Studies toggle
+    const companyTypeSelect =
+        profileForm.querySelector('#profileCompanyType');
+
+    const companySection =
+        document.getElementById('profileCompanySection');
+
+    const higherStudiesSection =
+        document.getElementById('profileHigherStudiesSection');
+
+    const applyCompanyToggle = () => {
+        const isHigher = companyTypeSelect.value === 'higher';
+
+        companySection?.classList.toggle('active', !isHigher);
+
+        higherStudiesSection?.classList.toggle('active', isHigher);
+    };
+
+    companyTypeSelect?.addEventListener(
+        'change',
+        applyCompanyToggle
+    );
+
+    applyCompanyToggle();
+
+    // Profile form submit
+    profileForm.addEventListener('submit', async function(e) {
+
+        e.preventDefault();
+
+        const companyTypeValue =
+            profileForm.querySelector('#profileCompanyType').value;
+
+        const companyValueUpdated =
+            companyTypeValue === 'higher'
+                ? profileForm.querySelector('#profileHigherStudiesName').value.trim()
+                : profileForm.querySelector('#profileCompanyName').value.trim();
+
+        const fileInput =
+            profileForm.querySelector('#profilePicture');
+
+        let profilePicture = user?.profile_picture || '';
+
+        // Convert uploaded image to base64
+        if (fileInput.files.length > 0) {
+
+            const file = fileInput.files[0];
+
+            profilePicture = await new Promise((resolve, reject) => {
+
+                const reader = new FileReader();
+
+                reader.onload = () => resolve(reader.result);
+
+                reader.onerror = reject;
+
+                reader.readAsDataURL(file);
+
+            });
+        }
+
+        const payload = {
+
+            name: profileForm.querySelector('#profileName').value.trim(),
+
+            email: profileForm.querySelector('#profileEmail').value.trim(),
+
+            mobile: profileForm.querySelector('#profileMobile').value.trim(),
+
+            gender: profileForm.querySelector('#profileGender').value,
+
+            batch: profileForm.querySelector('#profilePassingYear').value.trim(),
+
+            course: profileForm.querySelector('#profileCourse').value.trim(),
+
+            company_type: companyTypeValue,
+
+            company: companyValueUpdated,
+
+            experience: profileForm.querySelector('#profileExperience').value.trim(),
+
+            profile_picture: profilePicture,
+
+            skills: profileForm.querySelector('#profileSkills').value.trim(),
+
+            achievements: profileForm.querySelector('#profileAchievements').value.trim()
+        };
+
+        try {
+
+            const updated = await apiFetch('/api/me/profile', {
+
+                method: 'PUT',
+
+                token: auth.getToken(),
+
+                body: payload
+            });
+
+            sessionStorage.setItem(
+                auth.SESSION_KEY,
+                JSON.stringify(updated)
+            );
+
+            alert('Profile updated successfully!');
+
+        } catch (e2) {
+
+            alert(e2.message || 'Failed to update profile.');
+        }
+    });
+}
 
     // Directory
     renderAlumniDirectory();
