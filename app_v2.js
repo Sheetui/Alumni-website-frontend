@@ -1,6 +1,9 @@
 // College Alumni Page - Main Application Script
 
-const API_BASE = window.ALIMIN_API_BASE || 'https://alumni-website3-production.up.railway.app';
+//const API_BASE = window.ALIMIN_API_BASE || 'https://alumni-website3-production.up.railway.app';
+
+window.API_BASE = window.API_BASE || 'https://alumni-website3-production.up.railway.app';
+const API_BASE = window.API_BASE;
 
 async function apiFetch(path, options = {}) {
     const url = `${API_BASE}${path}`;
