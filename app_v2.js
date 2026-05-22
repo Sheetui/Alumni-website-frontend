@@ -703,8 +703,9 @@ function loadAdminPanel() {
                 token: auth.getToken(),
                 body: {
                     title: document.getElementById('eventTitle').value.trim(),
-                    description: document.getElementById('eventDesc').value.trim(),
-                    date: document.getElementById('eventDate').value || new Date().toISOString().slice(0, 10)
+                    desc: document.getElementById('eventDesc').value.trim(),
+                    date: document.getElementById('eventDate').value || new Date().toISOString().slice(0, 10),
+                    type: 'notice'
                 }
             });
             this.reset();
