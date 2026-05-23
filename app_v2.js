@@ -1033,7 +1033,7 @@ async function renderAdminAlumni() {
         return;
     }
 
-    container.innerHTML = users.map(u => `
+   /* container.innerHTML = users.map(u => `
         <div class="card">
             <h4>${u.name}</h4>
             <p>${u.email}</p>
@@ -1043,6 +1043,54 @@ async function renderAdminAlumni() {
             </p>
         </div>
     `).join('');
+} */
+    
+    container.innerHTML = users.map(u => `
+    <div class="card alumni-card" data-id="${u.id}">
+    
+        <h4>${u.name}</h4>
+
+        <p>${u.email}</p>
+
+        <p>
+            Batch: ${u.batch || '-'}
+            |
+            ${u.company_type === 'higher'
+                ? 'College / University'
+                : 'Current Company'}:
+            ${u.company || '-'}
+        </p>
+
+    </div>
+`).join('');
+
+    document.querySelectorAll('.alumni-card').forEach(card => {
+
+    card.addEventListener('click', () => {
+
+        const id = card.dataset.id;
+
+        const alumni =
+            users.find(u => String(u.id) === id);
+
+        if (!alumni) return;
+
+        alert(`
+Name: ${alumni.name}
+Email: ${alumni.email}
+Mobile: ${alumni.mobile || '-'}
+Gender: ${alumni.gender || '-'}
+Batch: ${alumni.batch || '-'}
+Course: ${alumni.course || '-'}
+Company: ${alumni.company || '-'}
+Experience: ${alumni.experience || '-'}
+Skills: ${alumni.skills || '-'}
+Achievements: ${alumni.achievements || '-'}
+        `);
+
+    });
+
+});
 }
 
 async function renderFeedback() {
