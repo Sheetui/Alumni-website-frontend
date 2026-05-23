@@ -403,6 +403,29 @@ body {
     margin-bottom: 1.5rem;
 }
 
+#detailContent{
+    max-height:70vh;
+    overflow-y:auto;
+}
+
+.detail-photo{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    display:block;
+    margin:0 auto 20px;
+}
+
+#detailContent h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+#detailContent p{
+    margin-bottom:12px;
+}
+
 /* Forms */
 .form-group {
     margin-bottom: 1.2rem;
