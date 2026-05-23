@@ -172,6 +172,54 @@ function setupModals() {
     });
 }
 
+function showAlumniDetails(alumni){
+
+    const modal = document.getElementById('alumniDetailModal');
+
+    document.getElementById('detailContent').innerHTML = `
+
+        <h2>${alumni.name || 'Alumni'}</h2>
+
+        ${alumni.profile_picture
+            ? `<img src="${alumni.profile_picture}"
+                    class="detail-photo">`
+            : ''}
+
+        <p><strong>Email:</strong> ${alumni.email || '-'}</p>
+
+        <p><strong>Mobile:</strong> ${alumni.mobile || '-'}</p>
+
+        <p><strong>Gender:</strong> ${alumni.gender || '-'}</p>
+
+        <p><strong>Batch:</strong> ${alumni.batch || '-'}</p>
+
+        <p><strong>Course:</strong> ${alumni.course || '-'}</p>
+
+        <p>
+            <strong>
+            ${alumni.company_type==='higher'
+                ? 'College / University'
+                : 'Current Company'}
+            :
+            </strong>
+
+            ${alumni.company || '-'}
+        </p>
+
+        <p><strong>Experience:</strong></p>
+        <p>${alumni.experience || '-'}</p>
+
+        <p><strong>Skills:</strong></p>
+        <p>${alumni.skills || '-'}</p>
+
+        <p><strong>Achievements:</strong></p>
+        <p>${alumni.achievements || '-'}</p>
+
+    `;
+
+    modal.classList.add('active');
+}
+
 function setupFeedbackForm() {
     const form = document.getElementById('feedbackForm');
     if (!form) return;
