@@ -220,6 +220,15 @@ function showAlumniDetails(alumni){
     modal.classList.add('active');
 }
 
+document.getElementById('closeDetailModal')
+?.addEventListener('click', () => {
+
+    document
+        .getElementById('alumniDetailModal')
+        .classList.remove('active');
+
+});
+
 function setupFeedbackForm() {
     const form = document.getElementById('feedbackForm');
     if (!form) return;
@@ -1093,9 +1102,29 @@ async function renderAdminAlumni() {
     `).join('');
 } */
     
-    container.innerHTML = users.map(u => `
+   /* container.innerHTML = users.map(u => `
     <div class="card alumni-card" data-id="${u.id}">
     
+        <h4>${u.name}</h4>
+
+        <p>${u.email}</p>
+
+        <p>
+            Batch: ${u.batch || '-'}
+            |
+            ${u.company_type === 'higher'
+                ? 'College / University'
+                : 'Current Company'}:
+            ${u.company || '-'}
+        </p>
+
+    </div>
+`).join(''); */
+
+    container.innerHTML = users.map(u => `
+    <div class="card alumni-card-clickable"
+         onclick='showAlumniDetails(${JSON.stringify(u)})'>
+
         <h4>${u.name}</h4>
 
         <p>${u.email}</p>
